@@ -1,0 +1,107 @@
+<script
+src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin="anonymous"></script>
+
+<style>
+    .checked {border:solid 2px red;background:#ffff00;}
+</style>
+
+
+<div id=d2>
+    <div class="row">
+    <div class="col-md-2"><img src=snor-zwart.png id=1 class='select_img'></div>
+    <div class="col-md-2"><img src=snor-paars.png id=2 class='select_img'></div>
+    <div class="col-md-2"><img src=snor-oranje.png id=3 class='select_img'></div>
+    </div>
+    </div>
+    <br><br>
+    <br>
+    <div id=display>*</div>
+
+
+    <script>
+        $(document).ready(function() {
+        var image_selected = new Array();
+        
+         $('#d2').on('click', ".select_img", function () {
+             
+                var aa = $(this)
+                if( !aa.is('.checked')){
+                    aa.addClass('checked');
+                        
+                var my_id=this.id;
+                image_selected.push(my_id);
+        
+                } else {
+                    aa.removeClass('checked');
+                    var my_id=this.id;
+                    var index = image_selected.indexOf(my_id);
+                    if (index > -1) {
+                    image_selected.splice(index, 1);
+                    }
+                }
+            $('#display').html("ID of selected images :"+image_selected);
+            })
+        
+        })</script>
+
+
+
+
+<style>
+    .ddd:hover{
+                transform: scale(1.2);
+    -ms-transform: scale(1.2); /* IE 9 */
+    -webkit-transform: scale(1.2); /* Safari and Chrome */
+    -o-transform: scale(1.2); /* Opera */
+    -moz-transform: scale(1.2); /* Firefox */
+            }
+    
+            .selectedd{
+                transform: scale(1.2);
+    -ms-transform: scale(1.2); /* IE 9 */
+    -webkit-transform: scale(1.2); /* Safari and Chrome */
+    -o-transform: scale(1.2); /* Opera */
+    -moz-transform: scale(1.2); /* Firefox */
+    border:2px inset silver;
+            }
+    </style>
+
+<script>
+$(function(){
+    var ff;
+
+    $('.ddd').on('click', function(evt) {
+        ff = $(this);
+        evt.stopPropagation();
+        $('.ddd').removeClass('selectedd')
+        ff.addClass('selectedd')
+        console.log(this)
+    });
+    $('body').on('click', function() {
+        if (ff.length) {
+           ff.removeClass('selectedd')
+        }
+    });
+});
+
+function()
+    </script>
+
+<!-- <div style="width: 600px; background: #CCC;padding: 50px;" class="jjj">
+    <img src="http://www.nasa.gov/images/content/297522main_image_1244_946-710.jpg" class="ddd"  width="200"/>
+    <img src="http://www.nasa.gov/images/content/297522main_image_1244_946-710.jpg" class="ddd"  width="200"/>
+    <img src="http://www.nasa.gov/images/content/297522main_image_1244_946-710.jpg" class="ddd"  width="200"/>
+    </div> -->
+
+
+<br>
+<br>
+<br>
+
+<div>
+    <img src=snor-zwart.png id=zwart class='ddd' width="200">
+    <img src=snor-paars.png id=paars class='ddd' width="200">
+    <img src=snor-oranje.png id=oranje class='ddd' width="200">
+    </div>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+    {% if title %}
+        <title>Snorren Tijd - {{ title }} </title>
+    {% else %}
+        <title>Snorren Tijd</title>
+    {% endif %}
+
+</head>
+<body>
+<!-- Bootstrap Navigator Bar -->
+<header class="site-header">
+    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+            <img class="mr-2" src="/static/snor-logo-crop-resize.png"></img>
+            <a class="navbar-brand mr-4" href="/">SnorrenTijd</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
+                    <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
+                </div>
+                <!-- Navbar Right Side -->
+                <div class="navbar-nav">
+                    <!-- add stuff here -->
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- This is to display errors -->
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<div class="b-example-divider"></div>
+
+<div class="container">
+    <footer class="py-3 my-4 border-top">
+        <p class="text-center text-muted">&copy; 2022 SnorrenTijd, Inc</p>
+    </footer>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+    "english": {
+        "filename": "static/snorren/snor-english.png",
+        "width_cor_factor": 1,
+        "height_cor_factor_up": 1,
+        "height_cor_factor_down": -0.2
+    },
+    "CharlieChaplin": {
+        "filename": "charlieChaplinSnor.png",
+        "width_cor_factor": 0.7,
+        "height_cor_factor_up": 1,
+        "height_cor_factor_down": -0.2
+    }
+}

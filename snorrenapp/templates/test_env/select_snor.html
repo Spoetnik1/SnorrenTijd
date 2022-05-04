@@ -1,0 +1,61 @@
+<script
+src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin="anonymous"></script>
+
+<style>
+    .checked {border:solid 2px red;background:#ffff00;}
+</style>
+
+
+
+<style>
+    .snor:hover{
+                transform: scale(1.2);
+    -ms-transform: scale(1.2); /* IE 9 */
+    -webkit-transform: scale(1.2); /* Safari and Chrome */
+    -o-transform: scale(1.2); /* Opera */
+    -moz-transform: scale(1.2); /* Firefox */
+            }
+    
+            .selectedd{
+                transform: scale(1.2);
+    -ms-transform: scale(1.2); /* IE 9 */
+    -webkit-transform: scale(1.2); /* Safari and Chrome */
+    -o-transform: scale(1.2); /* Opera */
+    -moz-transform: scale(1.2); /* Firefox */
+    border:2px inset silver;
+            }
+    </style>
+
+
+<script>
+$(function(){
+    var ff;
+
+    $('.snor').on('click', function(evt) {
+        ff = $(this);
+        evt.stopPropagation();
+        $('.snor').removeClass('selectedd')
+        ff.addClass('selectedd')
+        console.log(this)
+    });
+    $('body').on('click', function() {
+        if (ff.length) {
+           ff.removeClass('selectedd')
+        }
+    });
+});
+
+    </script>
+
+
+<br>
+<br>
+<br>
+
+<div>
+    <img src=snor-zwart.png id=zwart class='snor' width="200">
+    <img src=snor-paars.png id=paars class='snor' width="200">
+    <img src=snor-oranje.png id=oranje class='snor' width="200">
+    </div>

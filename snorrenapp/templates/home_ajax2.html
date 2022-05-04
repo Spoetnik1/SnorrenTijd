@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- <div>
+    <img id="snor-image"  src="" class="mx-auto d-block mb-4" style="max-width:600px;width:100%"> 
+</div> -->
+
+<div id="resultDiv" class="wrapper">
+    <img id="resultImage" class="result-imgage">
+</div>
+
+<div class="d-flex p-2">
+    <!-- Make it construct it automatically from a folder with snorren. -->
+    <img src=static/snorren/snor-english.png id=zwart class='snor' width="200">
+    <img src=static/snorren/snor-paars.png id=paars class='snor' width="200">
+    <img src=static/snorren/snor-oranje.png id=oranje class='snor' width="200">
+    </div>
+
+<div class="content-section">
+    <form id="upload-image" method="post" enctype="multipart/form-data">
+        <legend class="border-bottom mb-4">Submit Image to Add Mustaches To</legend>
+        <fieldset>
+            <label for="file">Select a file</label>
+            <input name="file" type="file" id="image-uploader" accept="image/jpeg, image/png, image/jpg">
+            <div id="picture-error" class="invalid-feedback"></div>
+        </fieldset>
+        <fieldset>
+            <button id="upload-image-btn" type="button" class="btn btn-outline-info">Add Snorren!</button>
+        </fieldset>
+    </form>
+</div>
+
+<script src="static/js/modal-snor-calculation.js"></script>
+<script src="static/js/snor-transform-plot.js"></script>
+
+<script>
+    var snorData;
+
+    // Now this goes synchronous, it could be that processes requiring this data don't yet have access to it.
+    $.getJSON('./static/snorren/snor-data.json', function(obj) {
+        snorData = obj
+    });
+
+    var snorBoxen; // Global variable for loading snor location
+
+    $(function() {
+        $('#upload-image-btn').click(function() {
+            $.event.trigger("ajaxStart") // Start loading animation
+            var form_data = new FormData($('#upload-image')[0]);
+            
+            $.ajax({
+                type: 'POST',
+                url: '/uploadImage',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(response) {
+                    console.log('Success!');
+                    console.log(response['faceData']);
+                    snorBoxen = response['faceData']
+                    $.event.trigger("ajaxStop") // Stops loading animation
+                },
+            });
+        });
+    });
+
+        // This is for the click selection of snorren.
+        $(function(){
+        var ff;
+
+        $('.snor').on('click', function(evt) {
+            ff = $(this);
+            evt.stopPropagation();
+            $('.snor').removeClass('selectedd')
+            ff.addClass('selectedd')
+            console.log(this)
+        });
+        $('body').on('click', function() {
+            if (ff.length) {
+            ff.removeClass('selectedd')
+            }
+        });
+    });
+</script>
+
+<div class="modal"></div>
+
+{% endblock content %}

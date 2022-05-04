@@ -1,0 +1,75 @@
+<style>
+.wrapper{
+    display: inline-block;
+    position:relative;
+  }
+  .big-img{
+    width: 100%;
+    max-width: 100%;
+  }
+</style>
+
+<div id="resultImage" class="wrapper">
+    <img class="big-img" src="nana_zonder_snor.jpg">
+    <!-- <img class="snor-img" src="snor.png"> -->
+</div>
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+
+<script>
+  // mock response
+  const response = [{angle: -226.86, x: 571, y: 848, width: 98, height: 35}, {angle: -226.86, x: 100, y: 300, width: 120, height: 35}];
+  var snorName = 'english'
+  
+  // Import from some external js script
+  const snorTypes = {english: {
+    filename: "englishSnor.png",
+    width_cor_factor: 1,
+    height_cor_factor_up: 1,
+    height_cor_factor_down: -0.2
+  },
+  CharlieChaplin: {
+   filename:  "charlieChaplinSnor.png",
+   width_cor_factor: 0.7,
+   height_cor_factor_up: 1,
+   height_cor_factor_down: -0.2
+  }
+};
+
+
+  function transformSnor(snorBox, snorName) {
+    var snorData = snorTypes[snorName]
+
+    let correctedSnorBox = Object.assign({}, snorBox);
+    correctedSnorBox['x'] = snorBox['x'] + snorBox['width'] * ((1-snorData['width_cor_factor'])/2)
+    correctedSnorBox['width'] = snorBox['width'] * snorData['width_cor_factor']
+    correctedSnorBox['y'] = snorBox['y'] + snorBox['height'] * (1 - snorData['height_cor_factor_up'])
+    correctedSnorBox['height'] = snorBox['height'] * (1-snorData['height_cor_factor_down'])
+
+    return correctedSnorBox
+    };
+
+
+  function drawSnorren(correctedSnorBox, snorType) {
+    var snor = document.createElement("IMG");
+    snor.src = snorType['filename']
+    snor.style.position = "absolute"
+    snor.style.left=`${correctedSnorBox['x']}px`
+    snor.style.top=`${correctedSnorBox['y']}px`
+    snor.style.width=`${correctedSnorBox['width']}px`  
+    snor.style.height=`${correctedSnorBox['height']}px`
+    document.getElementById('resultImage').appendChild(snor);
+  }
+
+
+  $(document).ready(     
+      correctedResponse = transformSnor(response[0], snorName),
+      drawSnorren( correctedResponse, snorTypes[snorName]) 
+    )
+
+</script>
+
+
