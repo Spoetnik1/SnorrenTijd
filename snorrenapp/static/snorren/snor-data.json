@@ -5,6 +5,18 @@
         "height_cor_factor_up": 1,
         "height_cor_factor_down": -0.2
     },
+    "paars": {
+        "filename": "static/snorren/snor-paars.png",
+        "width_cor_factor": 1,
+        "height_cor_factor_up": 1,
+        "height_cor_factor_down": -0.2
+    },
+    "oranje": {
+        "filename": "static/snorren/snor-oranje.png",
+        "width_cor_factor": 1,
+        "height_cor_factor_up": 1,
+        "height_cor_factor_down": -0.2
+    },
     "CharlieChaplin": {
         "filename": "charlieChaplinSnor.png",
         "width_cor_factor": 0.7,

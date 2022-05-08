@@ -7,7 +7,7 @@
 
 <div class="d-flex p-2">
     <!-- Make it construct it automatically from a folder with snorren. -->
-    <img src=static/snorren/snor-english.png id=zwart class='snor' width="200">
+    <img src=static/snorren/snor-english.png id=english class='snor' width="200">
     <img src=static/snorren/snor-paars.png id=paars class='snor' width="200">
     <img src=static/snorren/snor-oranje.png id=oranje class='snor' width="200">
     </div>
@@ -37,8 +37,15 @@
         snorData = obj
     });
 
-    var snorBoxen; // Global variable for loading snor location
+    
     var correctedSnorBoxen; // Global variable for loading the corrected snorboxen
+
+    var snorBoxen; // Global variable for loading snor location
+    
+    function set_exists(x){ 
+        //function to call inside ajax callback 
+        snorBoxen = x;
+    };
 
     $(function() {
         $('#upload-image-btn').click(function() {
@@ -52,10 +59,10 @@
                 contentType: false,
                 cache: false,
                 processData: false,
+                async: false, // set to false so order of operations is correct
                 success: function(response) {
-                    console.log('Success!');
-                    console.log(response['faceData']);
-                    snorBoxen = response['faceData']
+                    // ADD SOME LOGGING?
+                    set_exists(response['faceData']) // Saves the data to a global variable
                     $.event.trigger("ajaxStop") // Stops loading animation
                 },
             });
@@ -71,9 +78,15 @@
             evt.stopPropagation();
             $('.snor').removeClass('selectedd')
             ff.addClass('selectedd')
-            console.log(this)
-            correctedSnorBoxen = transformSnor
-            
+            //  PUT IN LOOP FOR EVERY SNORBOX IN ARRAY
+
+                // console.log(this.id)
+                // console.log(snorBoxen)
+                // correctedSnorBox = transformSnor(snorBoxen[0], snorData[this.id])
+                // drawSnor(correctedSnorBox, this.src)
+                drawSnor(snorBoxen[0], this.src)
+
+            // drawSnor(correctedSnorBox, snorData[this.id]['filename'])            
         });
         $('body').on('click', function() {
             if (ff.length) {
