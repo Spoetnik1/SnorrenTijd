@@ -8,8 +8,8 @@
 <div class="d-flex p-2">
     <!-- Make it construct it automatically from a folder with snorren. -->
     <img src=static/snorren/snor-english.png id=english class='snor' width="200">
-    <img src=static/snorren/snor-paars.png id=paars class='snor' width="200">
-    <img src=static/snorren/snor-oranje.png id=oranje class='snor' width="200">
+    <img src=static/snorren/snor-borstel.png id=borstel class='snor' width="200">
+    <img src=static/snorren/snor-kat.png id=kat class='snor' width="200">
     </div>
 
 <div class="content-section">
@@ -21,7 +21,7 @@
             <div id="picture-error" class="invalid-feedback"></div>
         </fieldset>
         <fieldset>
-            <button id="upload-image-btn" type="button" class="btn btn-outline-info">Add Snorren!</button>
+            <button id="upload-image-btn" type="button" class="btn btn-outline-info">Calculate Snorren!</button>
         </fieldset>
     </form>
 </div>
@@ -37,9 +37,7 @@
         snorData = obj
     });
 
-    
     var correctedSnorBoxen; // Global variable for loading the corrected snorboxen
-
     var snorBoxen; // Global variable for loading snor location
     
     function set_exists(x){ 
@@ -80,13 +78,13 @@
             ff.addClass('selectedd')
             //  PUT IN LOOP FOR EVERY SNORBOX IN ARRAY
 
-                // console.log(this.id)
-                // console.log(snorBoxen)
-                // correctedSnorBox = transformSnor(snorBoxen[0], snorData[this.id])
-                // drawSnor(correctedSnorBox, this.src)
-                drawSnor(snorBoxen[0], this.src)
+            remove_mustages()
 
-            // drawSnor(correctedSnorBox, snorData[this.id]['filename'])            
+            for(i=0; i<snorBoxen.length; i++){
+                console.log(i)
+                drawSnor(snorBoxen[i], this.src)
+            }
+
         });
         $('body').on('click', function() {
             if (ff.length) {

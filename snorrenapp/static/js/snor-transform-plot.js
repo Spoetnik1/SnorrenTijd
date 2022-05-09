@@ -1,4 +1,5 @@
 function remove_mustages(){
+    console.log('Snorren verwijderd!')
     // Removes existing mustaches if exists.
     var childIMGs = document.getElementById('resultDiv').getElementsByTagName('img');
 
@@ -26,9 +27,8 @@ function transformSnor(singleSnorBox, specificSnorData) {
 
 function drawSnor(correctedSnorBox, snorSrc) {
     /* This function removes already existing snorren and replaces with new ones. */
-    remove_mustages()
-
     var snor = document.createElement("IMG");
+    
     snor.src = snorSrc
     snor.style.position = "absolute"
     snor.style.left=`${correctedSnorBox['x']}px`
