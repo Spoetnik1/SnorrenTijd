@@ -2,7 +2,7 @@ import mtcnn
 import matplotlib.pyplot as plt
 from PIL import Image
 import math
-from typing import List, Dict
+from typing import Dict
 
 
 def define_snor_size(face_keypoints):

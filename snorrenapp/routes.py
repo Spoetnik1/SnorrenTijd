@@ -1,10 +1,9 @@
-from snorrenapp import app
-from snorrenapp.forms import PictureSubmitForm
-from snorrenapp.add_snorren import get_facial_keypoints
-from flask import render_template, flash, url_for, redirect, send_from_directory, abort, session, request, jsonify, g
 import secrets
 import os
 import time
+from flask import render_template, flash, url_for, redirect, send_from_directory, abort, session, request, jsonify, g
+from snorrenapp import app
+from snorrenapp.add_snorren import get_facial_keypoints
 
 
 def save_picture(form_picture):
@@ -25,13 +24,18 @@ def home():
 
 @app.route('/uploadImage', methods=["GET", 'POST'])
 def upload_image():
+    """Generates a response with the facial feature cooridantes as present in a picture."""
     IMAGE_PATH = "C://Users//super//IdeaProjects//snorren//snorrenapp//static//uploaded_images//"
 
     isthisFile = request.files.get('file')
     save_fn = IMAGE_PATH + isthisFile.filename
     isthisFile.save(save_fn)
 
+    tic = time.perf_counter()
     face_coordinates = get_facial_keypoints(save_fn)
+    toc = time.perf_counter()
+    logging
+    
     print(face_coordinates)
     if len(face_coordinates) < 1:
         response = jsonify(
@@ -52,9 +56,11 @@ def upload_image():
 
 @app.route('/get_image/<uploaded_image>')
 def display_uploaded_file(uploaded_image):
+    """Route to display a file previously uploaded"""
     return send_from_directory(directory=app.config["IMAGE_UPLOADS"], path=uploaded_image)
 
 
 @app.route("/about")
 def about():
+    """Returens the about-page html template"""
     return render_template('about.html', title='About')
