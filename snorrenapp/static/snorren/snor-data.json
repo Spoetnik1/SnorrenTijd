@@ -5,6 +5,18 @@
         "height_cor_factor_up": 1,
         "height_cor_factor_down": -0.2
     },
+    "borstel": {
+        "filename": "static/snorren/snor-borstel.png",
+        "width_cor_factor": 1,
+        "height_cor_factor_up": 1,
+        "height_cor_factor_down": -0.2
+    },
+    "kat": {
+        "filename": "static/snorren/snor-kat.png",
+        "width_cor_factor": 1,
+        "height_cor_factor_up": 1,
+        "height_cor_factor_down": -0.2
+    },
     "CharlieChaplin": {
         "filename": "charlieChaplinSnor.png",
         "width_cor_factor": 0.7,

@@ -7,10 +7,6 @@ import os
 import time
 
 
-def resize_picture(form_picture):
-    pass
-
-
 def save_picture(form_picture):
     """Save a picture locally"""
     random_hex = secrets.token_hex(8)
@@ -25,25 +21,6 @@ def save_picture(form_picture):
 @app.route("/home", methods=['GET', 'POST'])
 def home():
     return render_template('home.html')
-
-# def home():
-#     form = PictureSubmitForm()
-#     if form.validate_on_submit():
-#         if form.picture.data:
-#             picture_fn = save_picture(form.picture.data)
-#             session['uploaded_image'] = picture_fn
-#             print(session['uploaded_image'])
-#             flash('Your imaged has been saved!', 'success')
-#             return render_template('home.html', form=form, uploaded_image=picture_fn)
-#         else:
-#             flash('No image sumbitted, please try again', 'warning')
-#     return render_template('home.html', form=form)
-
-
-# @app.route("/withajax2", methods=['GET', 'POST'])
-# @app.route("/", methods=['GET', 'POST'])
-# @app.route("/home", methods=['GET', 'POST'])
-
 
 
 @app.route('/uploadImage', methods=["GET", 'POST'])

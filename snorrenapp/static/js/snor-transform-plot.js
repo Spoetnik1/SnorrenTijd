@@ -1,20 +1,34 @@
-function transformSnor(snorBox, snorName) {
+function remove_mustages(){
+    console.log('Snorren verwijderd!')
+    // Removes existing mustaches if exists.
+    var childIMGs = document.getElementById('resultDiv').getElementsByTagName('img');
+
+    for( i=0; i< childIMGs.length; i++ )
+    {
+        var childIMG = childIMGs[i];
+        if (childIMG.id != 'resultImage'){
+            childIMG.remove()
+        }
+    }
+};
+
+function transformSnor(singleSnorBox, specificSnorData) {
     /* The snorboxen are determined for every face, each snor is allowed to go outside of the snorbox
     by a set amount left-rigth, top, and bottom. */
-    var snorData = snorTypes[snorName]
 
-    let correctedSnorBox = Object.assign({}, snorBox);
-    correctedSnorBox['x'] = snorBox['x'] + snorBox['width'] * ((1-snorData['width_cor_factor'])/2)
-    correctedSnorBox['width'] = snorBox['width'] * snorData['width_cor_factor']
-    correctedSnorBox['y'] = snorBox['y'] + snorBox['height'] * (1 - snorData['height_cor_factor_up'])
-    correctedSnorBox['height'] = snorBox['height'] * (1-snorData['height_cor_factor_down'])
+    let correctedSnorBox = Object.assign({}, singleSnorBox);
+    correctedSnorBox['x'] = Math.round(singleSnorBox['x'] + singleSnorBox['width'] * ((1-specificSnorData['width_cor_factor'])/2))
+    correctedSnorBox['width'] = Math.round(singleSnorBox['width'] * specificSnorData['width_cor_factor'])
+    correctedSnorBox['y'] = Math.round(singleSnorBox['y'] + singleSnorBox['height'] * specificSnorData['height_cor_factor_up'])
+    correctedSnorBox['height'] = Math.round(singleSnorBox['height'] * (1-specificSnorData['height_cor_factor_down']))
 
     return correctedSnorBox
 };
 
-function drawSnorren(correctedSnorBox, snorSrc) {
+function drawSnor(correctedSnorBox, snorSrc) {
     /* This function removes already existing snorren and replaces with new ones. */
     var snor = document.createElement("IMG");
+    
     snor.src = snorSrc
     snor.style.position = "absolute"
     snor.style.left=`${correctedSnorBox['x']}px`

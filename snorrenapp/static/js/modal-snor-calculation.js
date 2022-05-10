@@ -10,6 +10,8 @@
    // This displays the uploaded picture
    document.getElementById('image-uploader').addEventListener('change', readURL, true);
    function readURL(){
+       remove_mustages()
+       
        var file = document.getElementById('image-uploader').files[0];
        var reader = new FileReader();
 
