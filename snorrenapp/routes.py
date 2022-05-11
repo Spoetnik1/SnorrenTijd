@@ -1,17 +1,22 @@
 import secrets
-import os
+from pathlib import Path
 import time
-from flask import render_template, flash, url_for, redirect, send_from_directory, abort, session, request, jsonify, g
+import logging
+from flask import render_template, send_from_directory, request, jsonify
 from snorrenapp import app
 from snorrenapp.add_snorren import get_facial_keypoints
 
+logger = logging.getLogger(__name__)
 
-def save_picture(form_picture):
+def save_picture(form_picture) -> str:
     """Save a picture locally"""
     random_hex = secrets.token_hex(8)
-    _, f_ext = os.path.splitext(form_picture.filename)
+    f_ext = Path(form_picture.filename).suffix
+    # _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = f"C://Users//super//IdeaProjects//snorren//snorrenapp//static//uploaded_images//{picture_fn}"
+    
+    picture_path = Path(app.config["IMAGE_UPLOADS"], picture_fn)
+    print(picture_path)
     form_picture.save(picture_path)
     return picture_fn
 
@@ -19,22 +24,22 @@ def save_picture(form_picture):
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
+    """Returns a rendered homepage."""
     return render_template('home.html')
 
 
 @app.route('/uploadImage', methods=["GET", 'POST'])
 def upload_image():
     """Generates a response with the facial feature cooridantes as present in a picture."""
-    IMAGE_PATH = "C://Users//super//IdeaProjects//snorren//snorrenapp//static//uploaded_images//"
 
     isthisFile = request.files.get('file')
-    save_fn = IMAGE_PATH + isthisFile.filename
+    save_fn = Path(app.config["IMAGE_UPLOADS"], isthisFile.filename)
     isthisFile.save(save_fn)
 
     tic = time.perf_counter()
     face_coordinates = get_facial_keypoints(save_fn)
     toc = time.perf_counter()
-    logging
+    logging.info(f'Ran facial recognisition on {save_fn}. Found {len(face_coordinates)} in {round(toc-tic,2)} sec')
     
     print(face_coordinates)
     if len(face_coordinates) < 1:
