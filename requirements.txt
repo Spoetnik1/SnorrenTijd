@@ -1,0 +1,6 @@
+Flask==2.0.3
+Flask_WTF==1.0.1
+matplotlib==3.5.2
+mtcnn==0.1.1
+Pillow==9.1.0
+WTForms==3.0.1
