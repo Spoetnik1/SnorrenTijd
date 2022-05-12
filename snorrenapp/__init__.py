@@ -3,17 +3,14 @@ from snorrenapp.loggingutils import configure_logger
 import configparser
 
 
-configure_logger()
-
 configuration = 'DEFAULT'
-
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-# logging.basicConfig(filename='snorrenTijdWebServer.log', level=logging.INFO)
+configure_logger(log_level=config[configuration]['logging_level'],
+                 logging_filename=config[configuration]['logging_file_name'])
 
 app = Flask(__name__)
-
 app.config['SECRET_KEY'] = config[configuration]['secret_key']
 app.config["IMAGE_UPLOADS"] = config[configuration]['image_file_path']
 app.config["SESSION_PERMANENT"] = False

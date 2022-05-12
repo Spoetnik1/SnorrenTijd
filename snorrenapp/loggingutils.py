@@ -3,11 +3,10 @@ import logging
 import sys
 
 
-def configure_logger():
+def configure_logger(log_level, logging_filename):
     """setting logging"""
-    log_level = 'INFO'
+    log_level = log_level
     logging_format = f'%(asctime)s %(levelname)s %(message)s'
-    logging_filename = 'flaskSnorren.log'
     root_logger = logging.getLogger('')
     # Capture warnings from external packages and log them as well
     logging.captureWarnings(True)
