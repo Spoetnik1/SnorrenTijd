@@ -17,7 +17,7 @@ class Coordinate():
     
     
 @dataclass
-class FaceKeypoint():
+class FaceKeypoints():
     """Relevant results of face recognition model for SnorrenTijd"""
     mouth_left: Coordinate
     mouth_right: Coordinate
@@ -28,11 +28,21 @@ class UpperLipBox():
     """Data about the location where the snor should be attached to the face. It's the 'box'
     between the upper lip and nose, a.k.a. the base of the snor
     """
-    def __init__(self, facekeypoints: FaceKeypoint):
+    def __init__(self,
+                 facekeypoints: FaceKeypoints,
+                 width: int = None,
+                 height: int = None,
+                 angle: int = None,
+                 snor_coordinate: Coordinate = None):
         self.facekeypoints = facekeypoints
-        self.define_snor_size()
-        self.define_snor_position()
-        
+        self.width = width
+        self.height = height
+        self.angle = angle
+        self.snor_coordinate = snor_coordinate
+        # if self.width and self.height:
+        #     self.define_snor_size()
+        #     self.define_snor_position()
+
     def define_snor_size(self):
         """Defines the width and height of the lip box"""
         self.width = self.facekeypoints.mouth_right.x - self.facekeypoints.mouth_left.x
@@ -46,24 +56,15 @@ class UpperLipBox():
         
         y_mouth = min(self.facekeypoints.mouth_left.y, self.facekeypoints.mouth_right.y)
         dy = y_mouth - self.facekeypoints.nose.y
-        
-        angle = math.degrees(math.tan(dx/dy))
-        
-        self.coordinate = Coordinate(x, y)
+        y = self.facekeypoints.nose.y + math.floor(dy*0.3)
+
+        self.snor_coordinate = Coordinate(x, y)
         self.angle = math.degrees(math.tan(dx/dy))
         
-    def response():
+    def response(self):
         """Generates a dictionary that could be used as a payload to the client"""
         response = {}
         return response
-            
-
-        
- 
-        
-        
-        
-        
 
 
 def define_snor_size(face_keypoints):
@@ -146,13 +147,17 @@ def draw_snorren(orginal_image_path: str, snor_path: str):
 
     for face in faces:
         snor_size = define_snor_size(face['keypoints'])
-        snor_position, angle = define_snor_position(face['keypoints'])
+        (x, y), angle = define_snor_position(face['keypoints'])
 
         snor_resized = initial_snor.copy()
         snor_resized = snor_resized.resize(snor_size)
         #snor_resized = snor_resized.rotate(angle, Image.NEAREST, expand = 1)
 
-        image_to_snor.paste(snor_resized, snor_position)#, mask=snor_resized)
+        image_to_snor.paste(snor_resized, (x, y))#, mask=snor_resized)
 
     imaged_snorred = image_to_snor.convert('RGB')
     return imaged_snorred
+
+
+def print_aapje():
+    print('aapje')
