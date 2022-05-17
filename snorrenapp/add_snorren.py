@@ -2,7 +2,7 @@ import mtcnn
 import matplotlib.pyplot as plt
 from PIL import Image
 import math
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from dataclasses import dataclass
 from flask import jsonify
 
@@ -15,96 +15,85 @@ class Coordinate():
     x: int
     y: int
     
-    
+
 @dataclass
 class FaceKeypoints():
     """Relevant results of face recognition model for SnorrenTijd"""
     mouth_left: Coordinate
     mouth_right: Coordinate
     nose: Coordinate
-    
+
+
+@dataclass
+class LipBoxData():
+    """Information for the holding place of the snor"""
+    top_position: Coordinate
+    dx: int
+    dy: int
+    angle: int = None
+
+    def __repr__(self):
+        dict_to_print = {
+            'x': self.top_position.x,
+            'y': self.top_position.y,
+            'width': self.dx,
+            'height': self.dy,
+            'angle': self.angle
+        }
+        return str(dict_to_print)
+
 
 class UpperLipBox():
     """Data about the location where the snor should be attached to the face. It's the 'box'
     between the upper lip and nose, a.k.a. the base of the snor
     """
     def __init__(self,
-                 facekeypoints: FaceKeypoints,
-                 width: int = None,
-                 height: int = None,
-                 angle: int = None,
-                 snor_coordinate: Coordinate = None):
-        self.facekeypoints = facekeypoints
-        self.width = width
-        self.height = height
-        self.angle = angle
-        self.snor_coordinate = snor_coordinate
-        # if self.width and self.height:
-        #     self.define_snor_size()
-        #     self.define_snor_position()
+                 facekey_points: FaceKeypoints,
+                 lipbox: LipBoxData = None):
 
-    def define_snor_size(self):
-        """Defines the width and height of the lip box"""
-        self.width = self.facekeypoints.mouth_right.x - self.facekeypoints.mouth_left.x
-        max_lips = max(self.facekeypoints.mouth_right.y, self.facekeypoints.mouth_left.y)
-        self.height = max_lips - self.facekeypoints.nose.y
-        
-    def define_snor_position(self):
-        """Defines the position and angle of the lip box"""
-        dx = self.facekeypoints.mouth_right.x - self.facekeypoints.mouth_left.x
-        x = self.facekeypoints.nose.x - math.floor(dx/2)
-        
-        y_mouth = min(self.facekeypoints.mouth_left.y, self.facekeypoints.mouth_right.y)
-        dy = y_mouth - self.facekeypoints.nose.y
-        y = self.facekeypoints.nose.y + math.floor(dy*0.3)
+    @staticmethod
+    def define_snor_size(face_keypoints: FaceKeypoints) -> Tuple[int, int]:
+        width = face_keypoints.mouth_right.x - face_keypoints.mouth_left.x
 
-        self.snor_coordinate = Coordinate(x, y)
-        self.angle = math.degrees(math.tan(dx/dy))
-        
-    def response(self):
-        """Generates a dictionary that could be used as a payload to the client"""
-        response = {}
-        return response
+        max_lips = max(face_keypoints.mouth_right.y, face_keypoints.mouth_left.y)
+        height = max_lips - face_keypoints.nose.y
+        return width, height
 
+    @staticmethod
+    def define_snor_position(face_keypoints: FaceKeypoints) -> Tuple[int, int, int]:
+        """The top left coordinates are the top left point of the snor. It is positioned
+        between the mouth and nose of the person."""
 
-def define_snor_size(face_keypoints):
-    width = face_keypoints['mouth_right'][0] - face_keypoints['mouth_left'][0]
+        dx = face_keypoints.mouth_right.x - face_keypoints.mouth_left.x
+        x = face_keypoints.nose.x - math.floor(dx/2)
 
-    max_lips = max(face_keypoints['mouth_right'][1], face_keypoints['mouth_left'][1])
-    height = max_lips - face_keypoints['nose'][1]
+        y_mouth = min(face_keypoints.mouth_left.y, face_keypoints.mouth_right.y)
+        dy = y_mouth - face_keypoints.nose.y
+        y = face_keypoints.nose.y + math.floor(dy*0.3)
 
-    return width, height
+        angle = math.degrees(math.tan(dx/dy))
+        return x, y, angle
 
+    def calculate_lip_box(self):
+        """Calculates the lipbox based on the face_keypoints attribute"""
+        width, height = define_snor_size()
+        x, y, angle = define_snor_position()
+        self.lipbox = LipBoxData(top_position=Coordinate(x, y),
+                            width=width,
+                            height=height,
+                            angle=angle)
 
-def define_snor_position(face_keypoints):
-    """The top left coordinates are the top left point of the snor. It is positioned
-    between the mouth and nose of the person."""
-
-    dx = face_keypoints['mouth_right'][0] - face_keypoints['mouth_left'][0]
-    x = face_keypoints['nose'][0] - math.floor(dx/2)
-
-    y_mouth = min(face_keypoints['mouth_left'][1], face_keypoints['mouth_right'][1])
-    dy = y_mouth - face_keypoints['nose'][1]
-    y = face_keypoints['nose'][1] + math.floor(dy*0.3)
-
-    angle = math.degrees(math.tan(dx/dy))
-    return x, y, angle
-
-
-def detect_faces_local(image_path: str) -> str:
-    """When run locally this calculates the face postitions.
-    If run in seperate containers, this is the response from the ML server
-    
-    The return is a JSON in the same format as the web ML model would provide"""
-    # Maybe better to pass a detector as an argument
-    detector = mtcnn.MTCNN() 
-    faces = detector.detect_faces(plt.imread(image_path))
-    response = jsonify(faces)
-    return response
-
-
-def detect_faces_external(image_path: str, location: str) -> str:
+def get_facial_data_response():
     pass
+
+
+def coordinate_from_tuple(coordinates: Tuple) -> Coordinate:
+    """Transforms a tuple format to an x, y Coordinate object."""
+    coordinate = Coordinate(coordinates[0], coordinates[1])
+    return coordinate
+
+
+
 
 
 def get_facial_keypoints(image_path: str, 
@@ -136,28 +125,18 @@ def get_facial_keypoints(image_path: str,
     return face_keypoints
 
 
-def draw_snorren(orginal_image_path: str, snor_path: str):
-    """Takes an image to fit snorren to, and a snor to fit. Saves an image with the snorren placed in the picture."""
+def detect_faces_local(image_path: str) -> str:
+    """When run locally this calculates the face postitions.
+    If run in seperate containers, this is the response from the ML server
 
-    detector = mtcnn.MTCNN() # Maybe better to pass as an argument, for when the server is always running
-    faces = detector.detect_faces(plt.imread(orginal_image_path))
-
-    initial_snor = Image.open(snor_path).convert("RGBA")
-    image_to_snor = Image.open(orginal_image_path).convert("RGBA")
-
-    for face in faces:
-        snor_size = define_snor_size(face['keypoints'])
-        (x, y), angle = define_snor_position(face['keypoints'])
-
-        snor_resized = initial_snor.copy()
-        snor_resized = snor_resized.resize(snor_size)
-        #snor_resized = snor_resized.rotate(angle, Image.NEAREST, expand = 1)
-
-        image_to_snor.paste(snor_resized, (x, y))#, mask=snor_resized)
-
-    imaged_snorred = image_to_snor.convert('RGB')
-    return imaged_snorred
+    The return is a JSON in the same format as the web ML model would provide"""
+    # Maybe better to pass a detector as an argument
+    detector = mtcnn.MTCNN()
+    faces = detector.detect_faces(plt.imread(image_path))
+    response = jsonify(faces)
+    return response
 
 
-def print_aapje():
-    print('aapje')
+def detect_faces_external(image_path: str, location: str) -> str:
+    pass
+

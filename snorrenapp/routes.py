@@ -6,7 +6,9 @@ from flask import render_template, send_from_directory, request, jsonify
 from snorrenapp import app
 from snorrenapp.add_snorren import get_facial_keypoints
 
+
 logger = logging.getLogger(__name__)
+
 
 def save_picture(form_picture) -> str:
     """Save a picture locally"""
@@ -41,7 +43,6 @@ def upload_image():
     toc = time.perf_counter()
     logging.info(f'Ran facial recognisition on {save_fn}. Found {len(face_coordinates)} in {round(toc-tic,2)} sec')
     
-    print(face_coordinates)
     if len(face_coordinates) < 1:
         response = jsonify(
             message='No faces detected',
