@@ -32,15 +32,16 @@ def home():
 
 @app.route('/uploadImage', methods=["GET", 'POST'])
 def upload_image():
-    """Generates a response with the facial feature cooridantes as present in a picture."""
+    """Generates a response with the facial feature coordinates as present in a picture."""
 
-    isthisFile = request.files.get('file')
-    save_fn = Path(app.config["IMAGE_UPLOADS"], isthisFile.filename)
-    isthisFile.save(save_fn)
+    isthisfile = request.files.get('file')
+    save_fn = Path(app.config["IMAGE_UPLOADS"], isthisfile.filename)
+    isthisfile.save(save_fn)
 
     tic = time.perf_counter()
-    face_coordinates = get_facial_keypoints(save_fn)
+    face_coordinates = get_facial_keypoints(save_fn, detect_local=True)
     toc = time.perf_counter()
+    print(face_coordinates)
     logging.info(f'Ran facial recognisition on {save_fn}. Found {len(face_coordinates)} in {round(toc-tic,2)} sec')
     
     if len(face_coordinates) < 1:
@@ -68,5 +69,5 @@ def display_uploaded_file(uploaded_image):
 
 @app.route("/about")
 def about():
-    """Returens the about-page html template"""
+    """Returns the about-page html template"""
     return render_template('about.html', title='About')

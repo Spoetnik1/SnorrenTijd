@@ -1,23 +1,36 @@
 import unittest
-from add_snorren import Coordinate, FaceKeypoints, UpperLipBox
+from add_snorren import FaceKeypoints, UpperLipBox
+from snorrenapp import app
 
 
-class MyTestCase(unittest.TestCase):
-    def test_something(self):
-        mouth_left = Coordinate(1,1)
-        mouth_right = Coordinate(1,1)
-        nose = Coordinate(1,1)
+class SnorRecognitionTests(unittest.TestCase):
+    """Look at ddt: https://ddt.readthedocs.io/en/latest/example.html. Model result
+    show some variance thus testing requires certain ranges instead of exact int matches."""
 
-        test_face = FaceKeypoints(mouth_left=mouth_left,
-                                  mouth_right=mouth_right,
-                                  nose=nose)
+    def test_UpperLipBox_creation(self):
+        # Based on test photo, nana_without_snor.jpg
 
-        test_lip_box = UpperLipBox(test_face)
+        # Some flask context creation
+        ctx = app.app_context()
+        ctx.push()
+        with ctx:
+            face_data = {'nose': (621, 832),
+                         'mouth_left': (579, 887),
+                         'mouth_right': (677, 887)}
 
-        snorbox_payload = test_lip_box.response()
+            face_keypoints = FaceKeypoints.from_dict(face_data)
+            lip_box = UpperLipBox(face_keypoints)
+            response_dict = lip_box.get_lip_box()
+            if 'angle' in response_dict:
+                response_dict.pop('angle')
 
-        self.assertEqual(Coordinate(2, 3), Coordinate(2, 3))
-        self.assertEqual(snorbox_payload, Coordinate(2, 3))
+            expected_reply = {
+                "x": 572,
+                "y": 848,
+                "height": 55,
+                "width": 98
+            }
+            self.assertEqual(expected_reply, response_dict)
 
 
 if __name__ == '__main__':
