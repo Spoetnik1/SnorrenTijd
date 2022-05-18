@@ -11,7 +11,7 @@ def configure_logger(log_level, logging_filename):
     # Capture warnings from external packages and log them as well
     logging.captureWarnings(True)
     # Default loggers
-    file_handler = logging.FileHandler('./logs', 'a')
+    file_handler = logging.FileHandler(f'./{logging_filename}', 'a')
     root_logger.addHandler(file_handler)
     formatter = logging.Formatter(logging_format)
     err_handler = logging.StreamHandler(sys.stderr)
