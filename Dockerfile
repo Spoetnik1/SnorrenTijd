@@ -10,10 +10,11 @@ COPY requirements.txt .
 # install dependencies
 RUN pip install -r requirements.txt
 
-ADD snorrenapp /app/snorrenapp
+# check which ones are required, maybe all for openCV
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 COPY . /app
 
 ENTRYPOINT ["tail", "-f", "/dev/null" ]
 
-# CMD ["snorrenapp/main.py" ]
+CMD ["RUN start.sh something something" ]
