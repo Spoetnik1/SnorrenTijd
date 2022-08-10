@@ -15,6 +15,12 @@ RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 COPY . /app
 
-ENTRYPOINT ["tail", "-f", "/dev/null" ]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
+#, "/bin/bash", "-l", "-c"
 
-CMD ["RUN start.sh something something" ]
+RUN chmod +x "setup.sh"
+
+RUN ./setup.sh
+
+CMD python run.py
+#RUN /bin/bash bash -c "setup.sh"
