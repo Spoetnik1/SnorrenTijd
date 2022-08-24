@@ -1,6 +1,7 @@
 import secrets
 from pathlib import Path
 import time
+from datetime import date
 import logging
 from flask import render_template, send_from_directory, request, jsonify
 from snorrenapp import app
@@ -27,7 +28,7 @@ def save_picture(form_picture) -> str:
 @app.route("/home", methods=['GET', 'POST'])
 def home():
     """Returns a rendered homepage."""
-    return render_template('home.html')
+    return render_template('home.html', current_year=date.today().year)
 
 
 @app.route('/uploadImage', methods=["GET", 'POST'])
@@ -70,4 +71,4 @@ def display_uploaded_file(uploaded_image):
 @app.route("/about")
 def about():
     """Returns the about-page html template"""
-    return render_template('about.html', title='About')
+    return render_template('about.html', title='About', current_year=date.today().year)
