@@ -25,5 +25,3 @@ def configure_logger(log_level, logging_filename):
     root_logger.setLevel('INFO')
     root_logger.info(f'Log level set to {log_level}')
     root_logger.setLevel(log_level)
-    
-    
